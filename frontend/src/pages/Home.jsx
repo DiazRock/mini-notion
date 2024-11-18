@@ -18,27 +18,27 @@ const Home = () => {
     };
 
     return (
-        <Layout style={{ minHeight: "100vh" }}>
-            <Header style={{ background: "#001529", color: "#fff", padding: "0 16px" }}>
-                <Title style={{ color: "#fff", margin: 0 }} level={3}>
+        <Layout className="layout-container">
+            <Header className="header">
+                <Title className="title" level={3}>
                     Mini-Notion
                 </Title>
             </Header>
             <Layout>
-                <Sider width={200} style={{ background: "#fff" }}>
+                <Sider width={200} className="layout-sider">
                     <Menu
                         mode="inline"
                         defaultSelectedKeys={["1"]}
-                        style={{ height: "100%" }}
+                        className="sider-menu"
                     >
                         <Menu.Item key="1">Tasks</Menu.Item>
                         <Menu.Item key="2">Notes</Menu.Item>
                     </Menu>
                 </Sider>
                 <Layout>
-                    <Content style={{ margin: "16px" }}>
+                    <Content className="layout-content">
                         <SearchBar onSearch={handleSearch} />
-                        <div style={{ marginTop: "16px" }}>
+                        <div className="search-bar-container">
                             <TaskManager />
                             <TextEditor />
                         </div>

@@ -22,12 +22,12 @@ const Login = ({ onLogin }) => {
     };
 
     return (
-        <div style={{ maxWidth: 400, margin: "50px auto", textAlign: "center" }}>
+        <div className="form-container">
             <Title level={2}>Login</Title>
             <Form
                 layout="vertical"
                 onFinish={handleLogin}
-                style={{ marginTop: 16 }}
+                className="form-title"
             >
                 <Form.Item
                     label="Username"
