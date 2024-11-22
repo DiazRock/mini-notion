@@ -1,0 +1,79 @@
+/* Navbar styling */
+.navbar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ensures proper spacing between logo and menu */
+    background-color: #001529; /* Dark theme */
+    padding: 0 20px;
+    height: 64px;
+}
+
+.navbar-title {
+    color: white;
+}
+
+.navbar-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%; /* Fullscreen in mobile */
+    max-width: 300px; /* Restrict width on larger devices */
+}
+
+.navbar-logo {
+    color: #1890ff;
+    font-size: 24px;
+    line-height: 64px; /* Center the title vertically */
+    padding: 0 20px;
+    display: inline-block;
+}
+
+.navbar-menu {
+    display: flex;
+    gap: 20px;
+    float: right;
+}
+
+.navbar-menu .ant-menu-item {
+    padding: 0 20px; /* Padding for menu items */
+    font-size: clamp(0.8rem, 2vw, 1rem);
+}
+
+.navbar-menu .ant-menu-item a {
+    text-decoration: none;
+}
+
+.navbar-menu .ant-menu-item a:hover {
+    color: #1890ff;
+}
+
+/* Adjust for smaller screens */
+@media (max-width: 768px) {
+
+    .navbar-menu .ant-menu-item {
+        width: 100%;
+        text-align: center;
+        font-size: 0.9rem;
+    }
+
+    .navbar-menu-button {
+        display: inline-block; /* Show button for smaller screens */
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-menu .ant-menu-item {
+        font-size: 0.8rem; /* Smaller font for mobile devices */
+    }
+}
+
+@media (max-width: 360px) {
+    .navbar-menu .ant-menu-item {
+        font-size: 0.7rem; /* Even smaller font for very small screens */
+    }
+}

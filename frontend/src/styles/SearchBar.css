@@ -1,0 +1,19 @@
+/* SearchBar container */
+.search-input {
+  width: 100%; /* Makes the input width flexible */
+  max-width: 300px; /* Sets a maximum width */
+  margin: 0 auto; /* Centers the input */
+}
+
+/* Optional: Make the input more responsive on smaller screens */
+@media (max-width: 768px) {
+  .search-input {
+    width: 80%; /* Take 80% of the available width on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input {
+    width: 100%; /* Take the full width on very small screens */
+  }
+}
