@@ -1,50 +1,59 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Typography } from 'antd';
+import { Link, Outlet } from 'react-router-dom';  // To handle navigation
 import TextEditor from '../components/TextEditor';
 import TaskManager from '../components/TaskManager';
 import SearchBar from '../components/SearchBar';
+import axios from 'axios';
+import '../styles/Navbar.css';
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content } = Layout;
 const { Title } = Typography;
 
 const Home = () => {
     const [searchResults, setSearchResults] = useState([]);
 
+    const [drawerVisible, setDrawerVisible] = useState(false);
+
+    const toggleDrawer = () => {
+        setDrawerVisible(!drawerVisible);
+    };
+
+    const closeDrawer = () => {
+        setDrawerVisible(false);
+    };
+
     const handleSearch = (query) => {
-        // Search functionality
         console.log(`Searching for: ${query}`);
-        //
         axios.get(`/search?query=${query}`).then(res => setSearchResults(res.data));
     };
 
     return (
         <Layout className="layout-container">
-            <Header className="header">
-                <Title className="title" level={3}>
-                    Mini-Notion
-                </Title>
-            </Header>
-            <Layout>
-                <Sider width={200} className="layout-sider">
-                    <Menu
-                        mode="inline"
-                        defaultSelectedKeys={["1"]}
-                        className="sider-menu"
-                    >
-                        <Menu.Item key="1">Tasks</Menu.Item>
-                        <Menu.Item key="2">Notes</Menu.Item>
-                    </Menu>
-                </Sider>
-                <Layout>
-                    <Content className="layout-content">
-                        <SearchBar onSearch={handleSearch} />
-                        <div className="search-bar-container">
-                            <TaskManager />
-                            <TextEditor />
+            <Header className="navbar-header">
+                <div className="navbar-logo">
+                    <Title level={3}>
+                        <div className="navbar-title">
+                            Mini-Notion
                         </div>
-                    </Content>
-                </Layout>
-            </Layout>
+                    </Title>
+                </div>
+                <Menu mode="horizontal" theme="dark" className="navbar-menu">
+                    <Menu.Item key="tasks">
+                        <Link to="/tasks">Tasks</Link>
+                    </Menu.Item>
+                    <Menu.Item key="notes">
+                        <Link to="/notes">Notes</Link>
+                    </Menu.Item>
+                    <Menu.Item key="view-all">
+                        <Link to="/view-all">View All</Link>
+                    </Menu.Item>
+                </Menu>
+                    
+            </Header>
+            <Content className="layout-content">
+                <Outlet/>
+            </Content>
         </Layout>
     );
 };

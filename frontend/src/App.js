@@ -1,15 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './assets/styles.css';
 import Home from './pages/Home';
-import Login from './pages/Login';
+import Tasks from './pages/Tasks';
+import Notes from './pages/Notes';
+import ViewAll from './pages/ViewAll';
+import './App.css';
 
 const App = () => {
     return (
         <Router>
             <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Home />}>
+                  <Route index element={<ViewAll />} />
+                  <Route path="/tasks" element={<Tasks />} />
+                  <Route path="/notes" element={<Notes />} />
+                  <Route path="/view-all" element={<ViewAll />} />
+                </Route>
             </Routes>
         </Router>
     );

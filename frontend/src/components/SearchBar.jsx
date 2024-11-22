@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import { Input } from 'antd';
+import '../styles/SearchBar.css';
 
 const SearchBar = ({ onSearch }) => {
     const [query, setQuery] = useState("");
 
     const handleSearch = (value) => {
         setQuery(value);
-        onSearch(value); // Pass the query to the parent component for handling
+        onSearch(value);
     };
 
     return (
         <Input.Search
+            className="search-input"
             placeholder="Search tasks or notes..."
             value={query}
             onSearch={handleSearch}
             onChange={(e) => setQuery(e.target.value)}
             allowClear
-            style={{ width: 300 }}
         />
     );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Typography, message } from 'antd';
 import axios from '../api/api';
+import '../styles/Login.css';
 
 const { Title } = Typography;
 
@@ -22,12 +23,12 @@ const Login = ({ onLogin }) => {
     };
 
     return (
-        <div className="form-container">
+        <div className="login-container">
             <Title level={2}>Login</Title>
             <Form
                 layout="vertical"
                 onFinish={handleLogin}
-                className="form-title"
+                className="login-form"
             >
                 <Form.Item
                     label="Username"
