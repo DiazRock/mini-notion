@@ -9,6 +9,8 @@ services:
       - ./backend:/app
     environment:
       - DATABASE_URL=sqlite:///./app/database.db
+    networks:
+      - app-network
 
   frontend:
     build:
@@ -17,4 +19,11 @@ services:
       - "3005:3000"
     volumes:
       - ./frontend:/app
+    environment:
+      - REACT_APP_BACKEND_URL=http://backend:8000
+    networks:
+      - app-network
 
+networks:
+  app-network:
+    driver: bridge
