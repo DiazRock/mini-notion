@@ -7,7 +7,6 @@ import Notes from './pages/Notes';
 import ViewAll from './pages/ViewAll';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import { Task } from './interfaces';
 import './App.css'
 
 const App = () => {
@@ -23,31 +22,33 @@ const App = () => {
                             <Home />
                         </ProtectedRoute>
                     }
-                />
-                <Route
-                    path="/tasks"
-                    element={
-                        <ProtectedRoute>
-                            <Tasks visible={true} onClose= {() => {}} />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/notes"
-                    element={
-                        <ProtectedRoute>
-                            <Notes />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/view-all"
-                    element={
-                        <ProtectedRoute>
-                            <ViewAll />
-                        </ProtectedRoute>
-                    }
-                />
+                >
+                    <Route index element={<ViewAll />} />
+                    <Route
+                        path="/tasks"
+                        element={
+                            <ProtectedRoute>
+                                <Tasks />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/notes"
+                        element={
+                            <ProtectedRoute>
+                                <Notes />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/view-all"
+                        element={
+                            <ProtectedRoute>
+                                <ViewAll />
+                            </ProtectedRoute>
+                        }
+                    />
+                </Route>
             </Routes>
         </Router>
     );

@@ -4,7 +4,7 @@ import axiosInstance from '../api';
 import { RegisterFormValues } from '../interfaces';
 import { Link } from 'react-router-dom';
 import { useNotification } from '../utils/notificationHook';
-import '../styles/Register.css';
+import '../styles/Auth.css';
 
 const { Title } = Typography;
 
@@ -15,9 +15,10 @@ const Register: React.FC = () => {
   const handleRegister = async (values: RegisterFormValues): Promise<void> => {
     try {
       setLoading(true);
-      await axiosInstance.post("/auth/register", values);
+      const { username, password } = values;
+      await axiosInstance.post("/auth/register", { username, password });
       showNotification('success', "Registration successful! You can now log in.");
-      window.location.href = "/login"; // Redirect to login after successful registration
+      window.location.href = "/"; // Redirect to login after successful registration
     } catch (error) {
       showNotification('error', "Registration failed. Please try again.");
     } finally {
@@ -26,7 +27,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="register-container">
+    <div className="auth-container">
       {notification && (
         <div className={`notification ${notification.type}`}>
           {notification.message}
@@ -44,13 +45,40 @@ const Register: React.FC = () => {
         >
           <Input placeholder="Enter your username" />
         </Form.Item>
+
         <Form.Item
           label="Password"
           name="password"
-          rules={[{ required: true, message: "Please input your password!" }]}
+          rules={[
+            { required: true, message: "Please input your password!" },
+            {
+              min: 8,
+              message: "Password must be at least 8 characters long.",
+            },
+          ]}
         >
           <Input.Password placeholder="Enter your password" />
         </Form.Item>
+
+        <Form.Item
+          label="Confirm Password"
+          name="confirmPassword"
+          dependencies={['password']}
+          rules={[
+            { required: true, message: "Please confirm your password!" },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue('password') === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error("Passwords do not match!"));
+              },
+            }),
+          ]}
+        >
+          <Input.Password placeholder="Confirm your password" />
+        </Form.Item>
+
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={loading}>
             Register

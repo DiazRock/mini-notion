@@ -182,7 +182,7 @@ export const handlers = [
     
     return HttpResponse.json({
       status: 200,
-      token: token
+      access_token: token
     });
   }),
 ];

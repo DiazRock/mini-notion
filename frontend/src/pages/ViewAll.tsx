@@ -12,28 +12,33 @@ const ViewAll: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]); 
   const [notes, setNotes] = useState<Note[]>([]); 
   const [loading, setLoading] = useState<boolean>(false);
-  const { notification, showNotification } = useNotification();
+  const { notification, callBackShowNotification } = useNotification();
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       try {
         setLoading(true);
         
+        const token = localStorage.getItem('token');
         const [tasksResponse, notesResponse] = await Promise.all([
-          axiosInstance.get<{status: Number, body: Task[]}>('/tasks'),
-          axiosInstance.get<{status: Number, body: Note[]}>('/notes'),
+          axiosInstance.get<{status: Number, body: Task[]}>(
+            '/tasks',
+            { headers: { Authorization: `Bearer ${token}` } },
+          ),
+          axiosInstance.get<{status: Number, body: Note[]}>('/notes',
+            { headers: { Authorization: `Bearer ${token}` } },
+          ),
         ]);
         setTasks(tasksResponse.data.body);
         setNotes(notesResponse.data.body);
       } catch (error) {
-        showNotification('error', 'Failed to fetch tasks and notes');
+        callBackShowNotification('error', 'Failed to fetch tasks and notes');
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
-  }, []);
+  }, [callBackShowNotification]);
 
   return (
     <div className="viewall-container">

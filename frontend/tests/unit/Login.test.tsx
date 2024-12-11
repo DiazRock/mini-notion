@@ -26,7 +26,8 @@ describe('Login Component', () => {
         const mockShowNotification = jest.fn(); 
         mockUseNotification.mockReturnValue({
             showNotification: mockShowNotification,
-            notification: null
+            notification: null,
+            callBackShowNotification: null,
         })
         // End of mockings
 

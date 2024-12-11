@@ -17,8 +17,9 @@ describe('Notes Component', () => {
         const mockUseNotification = jest.spyOn(notificationHook, 'useNotification');
         mockShowNotification = jest.fn(); 
         mockUseNotification.mockReturnValue({
-            showNotification: mockShowNotification,
-            notification: null
+            showNotification: null,
+            notification: null,
+            callBackShowNotification: mockShowNotification
         })
     })
 

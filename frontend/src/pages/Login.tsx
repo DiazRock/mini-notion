@@ -4,24 +4,24 @@ import axiosInstance from '../api';
 import { Link } from 'react-router-dom';
 import { LoginFormValues } from '../interfaces';
 import { useNotification } from '../utils/notificationHook';
-import '../styles/Login.css';
+import '../styles/Auth.css';
 
 const { Title } = Typography;
 
 const Login: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(false); // Loading state
+  const [loading, setLoading] = useState<boolean>(false);
   const { notification, showNotification } = useNotification();
 
   const handleLogin = async (values: LoginFormValues): Promise<void> => {
     try {
       setLoading(true);
-      const response = await axiosInstance.post<{ status: number, token: string }>("/auth/login", values);
-      if (response.data.status === 200) {
+      const response = await axiosInstance.post<{ status: number, access_token: string }>("/auth/login", values);
+      if (response.status === 200) {
         showNotification('success', "Login successful!");
-        localStorage.setItem("token", response.data.token); // Store the token in localStorage
+        localStorage.setItem("token", response.data.access_token);
         window.location.href = "/"; // Redirect to home after login
       }
-      else if (response.data.status === 401) {
+      else if (response.status === 401) {
         showNotification('error', "Login failed. Please enter your credentials and try again");
       }
       
@@ -33,7 +33,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="auth-container">
       <Title level={2}>Login</Title>
       {notification && (
         <div className={`notification ${notification.type}`}>
