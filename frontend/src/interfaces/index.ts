@@ -1,3 +1,4 @@
+import { Moment } from 'moment';
 export interface Note {
     id: number;
     title: string;
@@ -6,54 +7,52 @@ export interface Note {
     username: string;
   }
   
-  export interface NoteFormValues {
+export interface NoteFormValues {
     title: string; // Added to collect title in the form
     content: string;
     tags?: string[]; // Tags field for the form
   }
   
-  export interface Task {
-    id: number;
+export interface Task {
+    id?: number;
     title: string;
     description: string;
-    priority: 'High' | 'Medium' | 'Low'; // Added priority levels
-    due_date?: string; // Optional due date
-    is_completed: boolean; // To track completion status
-    user_id: number;
-    status: 'Pending' | 'In Progress' | 'Completed'; // Added status levels
+    priority: 'High' | 'Medium' | 'Low';
+    due_date: Moment;
+    status: 'Pending' | 'Progress' | 'Completed';
   }
   
-  export interface TaskFormValues {
-    title: string;
-    description: string;
-    priority: 'High' | 'Medium' | 'Low'; // Required priority
-    due_date?: string; // Optional due date
-  }
-  
-  export interface AddTaskModalProps {
+export interface AddTaskModalProps {
     visible: boolean;
     onClose: () => void;
   }
   
-  export interface RegisterFormValues {
+export interface RegisterFormValues {
     username: string;
     password: string;
   }
   
-  export interface LoginFormValues {
+export interface LoginFormValues {
     username: string;
     password: string;
   }
   
-  export interface SearchResult {
-    id: number; // Replace with the actual structure of your search results
+export interface SearchResult {
+    id: number;
     title: string;
     description?: string;
   }
   
-  export interface User {
+export interface User {
     id: number;
     username: string;
     email: string;
   }
   
+
+export interface TableProps<T> {
+    data: T[];
+    setData: React.Dispatch<React.SetStateAction<T[]>>;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    callBackShowNotification: (type: "success" | "error", message: string) => Promise<void>;
+  }
