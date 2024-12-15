@@ -1,16 +1,15 @@
 from app.models import Note
-from sqlalchemy import JSON
 from typing import List
 from sqlalchemy.orm import Session
 
 from app.schemas import NoteDTO
-from app.models.models import User
+from app.models import User
 
 class NotesRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_notes_by_user_id(self, id: int) -> Note:
+    def get_notes_by_user_id(self, id: int) -> List[Note]:
         return self.db.query(Note).filter(Note.user_id == id).all()
     
     def create_note(self, note_content: NoteDTO, user: User) -> Note:

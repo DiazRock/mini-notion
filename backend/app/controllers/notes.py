@@ -1,20 +1,18 @@
 from datetime import datetime
 from logging import Logger
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
 
-from app.services.note_service import NoteService
-from app.services.auth_service import AuthService
-from app.models.models import User
-from ..dep_container import get_db, get_notes_service, get_auth_service, get_logger
-from ..models import Note
-from ..schemas import NoteDTO, NoteResponse
+from app.services import NoteService, AuthService
+from app.models import User
+from ..dep_container import get_notes_service, get_auth_service, get_logger
+from ..schemas import NoteDTO
 
 
 notes_router = APIRouter(prefix="/notes", tags=["notes"])
 
 
-@notes_router.post("/", response_model=NoteResponse)
+@notes_router.post("/", response_model=NoteDTO)
 def create_note(
         note: NoteDTO,
         notes_service: NoteService = Depends(get_notes_service),
@@ -28,7 +26,7 @@ def create_note(
 
     note = notes_service.create_note(note, current_user)
 
-    return NoteResponse(
+    return NoteDTO(
         id=note.id,
         title=note.title,
         content=note.content,
@@ -37,7 +35,7 @@ def create_note(
     )
 
 
-@notes_router.get("/", response_model=list[NoteResponse])
+@notes_router.get("/", response_model=List[NoteDTO])
 def get_notes(
         notes_service: NoteService = Depends(get_notes_service),
         auth_service: AuthService = Depends(get_auth_service),
@@ -50,7 +48,7 @@ def get_notes(
     notes = notes_service.get_notes_by_user_id(current_user.id)
 
     return [
-        NoteResponse(
+        NoteDTO(
             id=note.id,
             title=note.title,
             content=note.content,

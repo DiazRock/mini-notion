@@ -64,18 +64,14 @@ class AuthService:
     def get_password_hash(self, password):
         return self.pwd_context.hash(password)
 
-    def create_access_token(self, data: dict, expires_delta: timedelta = None):
+    def create_access_token(self, data: dict, expires_delta: timedelta = timedelta(days=1)):
         to_encode = data.copy()
-        expire = datetime.now() + (expires_delta or timedelta(minutes=15))
+        expire = datetime.now() + expires_delta
         to_encode.update({"exp": expire})
         return jwt.encode(to_encode, self.config.SECRET_KEY, algorithm=self.config.ENCRYPT_ALGORITHM)
 
     def get_current_user(self, username: str) -> User:
         try:
-            # payload = jwt.decode(token, self.config.SECRET_KEY, algorithms=[self.config.ACCESS_TOKEN_EXPIRE_MINUTES, self])
-            # username: str = payload.get("sub")
-            # if username is None:
-            #     raise HTTPException(status_code=401, detail="Invalid token")
             user = self._users_repository.get_user_by_username(username)
             if user is None:
                 raise HTTPException(status_code=401, detail="User not found")

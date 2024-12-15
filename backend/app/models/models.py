@@ -14,7 +14,7 @@ class PriorityEnum(enum.Enum):
 
 class StatusEnum(enum.Enum):
     Pending = "Pending"
-    InProgress = "In Progress"
+    Progress = "Progress"
     Completed = "Completed"
 
 
@@ -35,8 +35,7 @@ class Task(Base):
     title = Column(String(255), nullable=False)
     description = Column(String(1000), nullable=False)
     priority = Column(Enum(PriorityEnum), nullable=False, default=PriorityEnum.Medium)
-    due_date = Column(Date, nullable=True)
-    is_completed = Column(Boolean, nullable=False, default=False)
+    due_date = Column(Date, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     status = Column(Enum(StatusEnum), nullable=False, default=StatusEnum.Pending)
 
