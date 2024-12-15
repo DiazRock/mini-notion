@@ -4,6 +4,7 @@ import { Link, Outlet, useNavigate } from 'react-router-dom'; // To handle navig
 import { SearchResult } from '../interfaces';
 import axiosInstance from '../api';
 import '../styles/Navbar.css';
+import '../styles/Home.css';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { List, Input, Button, Typography, Form, Tag, Select, Space } from 'antd';
+import { Input, Button, Typography, Form, Select } from 'antd';
 import axiosInstance from '../api';
 import { Note, NoteFormValues } from '../interfaces';
+import NoteTable from '../components/NoteTable';
 import { useNotification } from '../utils/notificationHook';
 import '../styles/Notes.css';
 
@@ -19,12 +20,11 @@ const Notes: React.FC = () => {
       try {
         setLoading(true);
         const token = localStorage.getItem('token');
-        const response = await axiosInstance.get<Note[]>('/notes', { 
-          headers: { 
-            Authorization: `Bearer ${token}` 
-          }
-        },
-        );
+        const response = await axiosInstance.get<Note[]>('/notes', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setNotes(response.data);
       } catch (error) {
         callBackShowNotification('error', 'Failed to fetch notes');
@@ -49,25 +49,11 @@ const Notes: React.FC = () => {
     }
   };
 
-  const handleDeleteNote = async (id: number): Promise<void> => {
-    try {
-      const token = localStorage.getItem('token');
-      await axiosInstance.delete(`/notes/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
-      callBackShowNotification('success', 'Note deleted successfully!');
-    } catch (error) {
-      callBackShowNotification('error', 'Failed to delete note');
-    }
-  };
-
   return (
     <div className="notes-container">
       {notification && <div className={`notification ${notification.type}`}>{notification.message}</div>}
       <Title level={2}>Notes</Title>
+
       <Form<NoteFormValues> layout="vertical" onFinish={handleAddNote} className="note-form">
         <Form.Item name="title" rules={[{ required: true, message: 'Please input the note title!' }]}>
           <Input placeholder="Note Title" />
@@ -88,33 +74,12 @@ const Notes: React.FC = () => {
           </Button>
         </Form.Item>
       </Form>
-      <List
-        bordered
-        dataSource={notes}
-        renderItem={(note) => (
-          <List.Item
-            actions={[
-              <Button
-                type="primary"
-                danger
-                onClick={() => handleDeleteNote(note.id)}
-              >
-                Delete
-              </Button>,
-            ]}
-          >
-            <div>
-              <Title level={4}>{note.title}</Title>
-              <p>{note.content}</p>
-              <div>
-                {note.tags?.map((tag) => (
-                  <Tag key={tag}>{tag}</Tag>
-                ))}
-              </div>
-            </div>
-          </List.Item>
-        )}
-        loading={loading}
+
+      <NoteTable
+        data={notes}
+        setData={setNotes}
+        callBackShowNotification={callBackShowNotification}
+        setLoading={setLoading}
       />
     </div>
   );

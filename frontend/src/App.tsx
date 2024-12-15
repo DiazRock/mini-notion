@@ -7,6 +7,7 @@ import Notes from './pages/Notes';
 import ViewAll from './pages/ViewAll';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import TaskDetails from './pages/TaskDetails';
 import './App.css'
 
 const App = () => {
@@ -48,6 +49,7 @@ const App = () => {
                             </ProtectedRoute>
                         }
                     />
+                    <Route path="/tasks/:id" element={<TaskDetails />} />
                 </Route>
             </Routes>
         </Router>

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Input, Form, List, Checkbox, Select, DatePicker } from 'antd';
-import { Task, TaskFormValues } from '../interfaces';
+import React, { useState } from 'react';
+import { Button, Input, Form, Select, DatePicker } from 'antd';
+import { Task } from '../interfaces';
 import axiosInstance from '../api';
 import { useNotification } from '../utils/notificationHook';
-import '../styles/Tasks.css';
-import moment from 'moment';
+import TaskTable from '../components/TaskTable';
+
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -14,25 +14,23 @@ const Tasks: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { notification, callBackShowNotification } = useNotification();
 
-  useEffect(() => {
-    (async (): Promise<void> => {
-      try {
-        setLoading(true);
-        const response = await axiosInstance.get<{ status: number; body: Task[] }>('/tasks');
-        setTasks(response.data.body);
-      } catch (error) {
-        callBackShowNotification('error', 'Failed to fetch tasks');
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [callBackShowNotification]);
-
-  const handleAddTask = async (values: TaskFormValues): Promise<void> => {
+  const handleAddTask = async (values: Task): Promise<void> => {
     try {
       setLoading(true);
-      const response = await axiosInstance.post('/tasks', values);
-      setTasks((prevTasks) => [...prevTasks, response.data.body]);
+      const token = localStorage.getItem('token');
+      const response = await axiosInstance.post(
+        '/tasks',
+        {
+          ...values,
+          due_date: values.due_date.format('YYYY-MM-DD'),
+        },
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        }
+      );
+      setTasks((prevTasks) => [...prevTasks, response.data]);
       callBackShowNotification('success', 'Task added successfully!');
     } catch (error) {
       callBackShowNotification('error', 'Failed to add task');
@@ -41,21 +39,10 @@ const Tasks: React.FC = () => {
     }
   };
 
-  const toggleCompletion = async (taskId: number, isCompleted: boolean): Promise<void> => {
-    try {
-      await axiosInstance.put(`/tasks/${taskId}`, { is_completed: isCompleted });
-      setTasks((prevTasks) =>
-        prevTasks.map((task) => (task.id === taskId ? { ...task, is_completed: isCompleted } : task))
-      );
-    } catch (error) {
-      callBackShowNotification('error', 'Failed to update task status');
-    }
-  };
-
   return (
-    <div className="tasks-container">
+    <>
       {notification && <div className={`notification ${notification.type}`}>{notification.message}</div>}
-      <Form<TaskFormValues> layout="vertical" onFinish={handleAddTask}>
+      <Form<Task> layout="vertical" onFinish={handleAddTask}>
         <Form.Item name="title" rules={[{ required: true, message: 'Please input the task title!' }]}>
           <Input placeholder="Task Title" />
         </Form.Item>
@@ -69,7 +56,14 @@ const Tasks: React.FC = () => {
             <Option value="Low">Low</Option>
           </Select>
         </Form.Item>
-        <Form.Item name="due_date">
+        <Form.Item name="status" rules={[{ required: true, message: 'Please choose a status' }]}>
+          <Select placeholder="Select status">
+            <Option value="Pending">Pending</Option>
+            <Option value="Progress">Progress</Option>
+            <Option value="Completed">Completed</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item name="due_date" rules={[{ required: true, message: 'Please select a due date' }]}>
           <DatePicker placeholder="Due Date" format="YYYY-MM-DD" />
         </Form.Item>
         <Form.Item>
@@ -78,26 +72,13 @@ const Tasks: React.FC = () => {
           </Button>
         </Form.Item>
       </Form>
-      <List
-        bordered
-        dataSource={tasks}
-        renderItem={(task) => (
-          <List.Item>
-            <Checkbox
-              checked={task.is_completed}
-              onChange={(e) => toggleCompletion(task.id, e.target.checked)}
-            >
-              {task.title}
-            </Checkbox>
-            <div>Priority: {task.priority}</div>
-            <div>Due Date: {task.due_date ? moment(task.due_date).format('YYYY-MM-DD') : 'None'}</div>
-            <div>{task.description}</div>
-            <div>{task.status}</div>
-          </List.Item>
-        )}
-        loading={loading}
-      />
-    </div>
+      <TaskTable
+        data={tasks}
+        setData={setTasks}
+        setLoading={setLoading}
+        callBackShowNotification={callBackShowNotification}
+        />
+    </>
   );
 };
 
