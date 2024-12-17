@@ -81,7 +81,12 @@ class AuthService:
 
     def login(self, form_data: OAuth2PasswordRequestForm):
         user = self._users_repository.get_user_by_username(form_data.username)
-        if not user or not self.verify_password(form_data.password, user.hashed_password):
+        if not user:
             raise HTTPException(status_code=400, detail="Invalid username or password")
-        access_token = self.create_access_token(data={"username": user.username, "password": user.hashed_password})
-        return {"access_token": access_token, "token_type": "bearer"}
+        try:
+            self.verify_password(form_data.password, user.hashed_password)
+            access_token = self.create_access_token(data={"username": user.username, "password": user.hashed_password})
+            return {"access_token": access_token, "token_type": "bearer"}
+        except Exception as e:
+            self.logger.error(f"Error verifying password: {e}")
+            raise HTTPException(status_code=400, detail="Invalid username or password")

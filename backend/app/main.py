@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .dep_container import engine, Base
-from .controllers import users, tasks, notes, auth
+from .controllers import tasks, notes, auth, search
 
 
 
@@ -21,6 +21,7 @@ app = FastAPI(title="Notion API",
 
 Base.metadata.create_all(bind=engine)
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3005"],  # Specify the exact origin here
@@ -29,10 +30,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(users.users_router)
+
 app.include_router(tasks.tasks_router)
 app.include_router(notes.notes_router)
 app.include_router(auth.auth_router)
+app.include_router(search.search_router)
 
 
 

@@ -3,6 +3,8 @@ from typing import List
 
 from app.schemas import TaskDTO
 from app.models import Task, User
+from sqlalchemy.sql import or_
+
 
 class TasksRepository:
     def __init__(self, db: Session):
@@ -48,3 +50,16 @@ class TasksRepository:
         
     def get_task_by_id(self, task_id: int) -> Task:
         return self.db.query(Task).filter(Task.id == task_id).first()
+    
+    def search_tasks(self, query: str, user_id: int):
+        """
+        Searches tasks by title.
+        """
+        return (
+            self.db.query(Task)
+            .filter(Task.user_id == user_id)
+            .filter(
+                Task.title.ilike(f"%{query}%")
+            )
+            .all()
+        )

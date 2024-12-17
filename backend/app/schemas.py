@@ -17,7 +17,6 @@ class UserResponse(BaseModel):
         orm_mode = True
 
 
-
 class TaskDTO(BaseModel):
     id: int
     title: str = Field(..., max_length=255)
@@ -44,3 +43,15 @@ class NoteDTO(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str
+
+
+class SearchResultDTO(BaseModel):
+    id: int
+    type: str  # "note" or "task"
+    title: str
+    content: Optional[str] = ''
+    priority: Optional[str] = ''
+    tags: Optional[List[str]]
+
+    class Config:
+        orm_mode = True
