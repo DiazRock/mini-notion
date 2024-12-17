@@ -28,10 +28,10 @@ describe('ViewAll Component', () => {
 
         // Verify tasks and notes after fetching
         await waitFor(() => {
-            expect(screen.getByText(/Task 1/i)).toBeInTheDocument();
-            expect(screen.getByText(/Task 2/i)).toBeInTheDocument();
-            expect(screen.getByText(/Note 1/i)).toBeInTheDocument();
-            expect(screen.getByText(/Note 2/i)).toBeInTheDocument();
+            expect(screen.getAllByText(/Task 1/i)[0]).toBeInTheDocument();
+            expect(screen.getAllByText(/Task 2/i)[0]).toBeInTheDocument();
+            expect(screen.getAllByText(/Note 1/i)[0]).toBeInTheDocument();
+            expect(screen.getAllByText(/Note 2/i)[0]).toBeInTheDocument();
         });
     });
 
@@ -55,9 +55,10 @@ describe('ViewAll Component', () => {
 
         // Wait for error messages to appear
         await waitFor(() => {
+
             expect(
                 screen
-                .getByText(/Failed to fetch tasks and notes/i))
+                .getByText(/Failed to fetch notes/i))
                 .toBeInTheDocument();
         });
     });

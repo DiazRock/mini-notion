@@ -1,9 +1,9 @@
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Notes from '../../src/pages/Notes';
 import { server } from '../../mocks/server';
 import * as notificationHook from '../../src/utils/notificationHook';
-import { http } from 'msw';
+import { http, HttpResponse } from 'msw';
+import { DataMock } from '../../mocks/handlers';
 
 const API_URL = 
     process.env.REACT_APP_API_URL || 
@@ -30,11 +30,14 @@ describe('Notes Component', () => {
     it('handles note addition', async () => {
         render(<Notes />);
 
-        fireEvent.change(screen.getByPlaceholderText(/write your note here/i), { target: { value: 'New Note' } });
+        fireEvent.change(screen.getByPlaceholderText(/write your note here/i), { 
+            target: 
+            { value: 'Content here' } 
+        });
         fireEvent.click(screen.getByRole('button', { name: /add note/i }));
 
         await waitFor(() => {
-            expect(screen.getByText('New Note')).toBeInTheDocument();
+            expect(screen.getByText('Content here')).toBeInTheDocument();
         });
     });
 
@@ -62,17 +65,19 @@ describe('Notes Component', () => {
         server.use(
             http.post(`${API_URL}/notes`, () => {
                 throw new Error('Failed to add note');
-            })
+            }),
         );
 
         // End of mockings
         
         render(<Notes />);
 
-        const placeholder = screen.getByPlaceholderText(/write your note here/i);
-        const addNoteButton = screen.getByRole('button', { name: /add note/i })
+        const textPlaceholder = screen.getByPlaceholderText(/write your note here/i);
+        const titlePlaceholder = screen.getByPlaceholderText(/Note Title/i);
+        const addNoteButton = screen.getByRole('button', { name: /add note/i });
 
-        fireEvent.change(placeholder, { target: { value: 'New Note' } });
+        fireEvent.change(titlePlaceholder, { target: { value: 'Title here' } });
+        fireEvent.change(textPlaceholder, { target: { value: 'Content here' } });
         fireEvent.click(addNoteButton);
 
         await waitFor(() => {

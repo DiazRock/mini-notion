@@ -1,6 +1,6 @@
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Tasks from '../../src/pages/Tasks';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { server } from '../../mocks/server';
 import { DataMock } from '../../mocks/handlers';
 import * as notificationHook from '../../src/utils/notificationHook';
@@ -31,21 +31,15 @@ describe('Tasks Component', () => {
         mockOnClose = jest.fn();
     });
     
-    afterEach(() => {
-        server.resetHandlers();
-        jest.clearAllMocks();
-    });
     
     afterAll(() => {
-        server.close();
+        jest.clearAllMocks();
     });
 
 
     it('handles task addition', async () => {
         render(
             <Tasks
-                visible={true}
-                onClose={mockOnClose}
             />
         );
 
@@ -69,10 +63,16 @@ describe('Tasks Component', () => {
     it('fetches and displays tasks', async () => {
         
         render(
-            <Tasks
-                visible={true}
-                onClose={mockOnClose}
-            />
+            <div>
+                <MemoryRouter>
+                    <Tasks />
+                    <Routes>
+                        <Route path="/tasks/:id" element={<></>} />
+                    </Routes>
+                </MemoryRouter>
+            </div>
+            
+            
         );
 
         // Wait for tasks to load
@@ -93,8 +93,6 @@ describe('Tasks Component', () => {
 
         render(
             <Tasks
-                visible={true}
-                onClose={() => {}}
             />
         );
 
