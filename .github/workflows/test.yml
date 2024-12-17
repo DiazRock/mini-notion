@@ -34,7 +34,7 @@ jobs:
 
       - name: Run Backend Tests
         run: |
-          pytest --junitxml=report.xml
+          PYTHONPATH=./backend pytest --junitxml=report.xml
 
       - name: Upload Backend Test Results
         if: always()
