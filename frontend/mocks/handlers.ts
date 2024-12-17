@@ -1,6 +1,7 @@
 // src/mocks/handlers.js
 import { http, HttpResponse } from 'msw';
 import { Note, Task, User } from '../src/interfaces';
+import moment from 'moment';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
@@ -16,30 +17,35 @@ export class DataMock {
 
   public static restartDataMock() {
     this.mockNotes = [
-      { id: 1, 
-        title: 'Note 1', 
-        content: 'Content of note 1', 
-        user_id: 1
+      {
+        id: 1,
+        title: 'Note 1',
+        content: 'Content of note 1',
+        username: 'username'
       },
       { id: 2, 
         title: 'Note 2', 
         content: 'Content of note 2', 
-        user_id: 1 
+        username: 'username' 
       }
     ];
     
     this.mockTasks = [
-      { 
-        id: 1, 
-        title: 'Task 1', 
-        description: 'Task 1 description', 
-        user_id: 1 
+      {
+        id: 1,
+        title: 'Task 1',
+        description: 'Task 1 description',
+        priority: 'High',
+        due_date: moment(),
+        status: 'Pending'
       },
-      { 
-        id: 2, 
-        title: 'Task 2', 
-        description: 'Task 2 description', 
-        user_id: 1 
+      {
+        id: 2,
+        title: 'Task 2',
+        description: 'Task 2 description',
+        priority: 'High',
+        due_date: moment(),
+        status: 'Pending'
       }
     ];
     
@@ -60,24 +66,23 @@ export const handlers = [
   // Notes routes
   http.post(`${API_URL}/notes`, (req: any) => {
     const { title, content } = req.body;
-    const newNote: Note = { 
-      id: DataMock.mockNotes.length + 1, 
-      title, 
-      content, 
-      user_id: 1 
+    const newNote: Note = {
+      id: DataMock.mockNotes.length + 1,
+      title,
+      content,
+      username: 'username'
     };
     DataMock.mockNotes.push(newNote);
-    return HttpResponse.json({
-      status: 201,
-      body: newNote
+    return HttpResponse.json(newNote, {
+      status: 201
     });
   }),
 
   http.get(`${API_URL}/notes`, () => {
-    return HttpResponse.json({
-      status: 200,
-      body: DataMock.mockNotes
-    }); 
+    const mockNotes = DataMock.mockNotes;
+    return HttpResponse.json(
+      mockNotes
+    );
   }),
 
   http.delete(`${API_URL}/notes/:noteId`, (req: any) => {
@@ -87,39 +92,41 @@ export const handlers = [
       );
     if (noteIndex === -1) {
       return HttpResponse.json({
-        status: 404,
-        body: { message: 'Note not found' }
+        message: 'Note not found'
+      }, {
+        status: 404
       });
     }
     DataMock.mockNotes.splice(noteIndex, 1);
     return HttpResponse.json({
-      status: 200,
-      body: { message: 'Note deleted' }
+      message: 'Note deleted',
+    }, {
+      status: 200
     });
   }),
 
   // Tasks routes
   http.post(`${API_URL}/tasks`, async ({ request }) => {
-    console.log('Here in the post tasks route', request);
     const { title, description } = await request.json() as { title: string, description: string };
-    const newTask: Task = { 
-      id: DataMock.mockTasks.length + 1, 
-      title, 
+    const newTask: Task = {
+      id: DataMock.mockTasks.length + 1,
+      title,
       description,
-      user_id: 1
+      priority: 'High',
+      due_date: moment(),
+      status: 'Pending'
     };
     DataMock.mockTasks.push(newTask);
-    return HttpResponse.json({
-      status: 201,
-      body: newTask
+    return HttpResponse.json(newTask, {
+      status: 201
     });
   }),
 
-  http.get(`${API_URL}/tasks`, () => {
-    return HttpResponse.json({
-      status: 200,
-      body: DataMock.mockTasks
-    });
+  http.get(`${API_URL}/tasks/`, () => {
+    const mockTasks = DataMock.mockTasks
+    return HttpResponse.json(
+      mockTasks
+    );
   }),
 
   http.put(`${API_URL}/tasks/:taskId`, (req: any) => {
@@ -129,17 +136,18 @@ export const handlers = [
       task => task.id === parseInt(taskId)
     );
     if (!task) {
-      return HttpResponse.json({
-        status: 404,
-        body: { message: 'Task not found' }
-      });
+      return HttpResponse.json(
+        { message: 'Task not found' },
+        {
+          status: 404
+        }
+      );
     }
     task.title = title;
     task.description = description;
-    return HttpResponse.json( {
-      status: 200,
-      body: task
-    });
+    return HttpResponse.json( task, 
+      { status: 200 }
+    );
   }),
 
   http.delete(`${API_URL}/tasks/:taskId`, (req: any) => {
@@ -148,24 +156,15 @@ export const handlers = [
       task => task.id === parseInt(taskId)
     );
     if (taskIndex === -1) {
-      return HttpResponse.json( {
-        status: 404,
-        body: { message: 'Task not found' }
-      });
+      return HttpResponse.json( 
+        { message: 'Task not found' },
+        { status: 404 }
+      );
     }
     DataMock.mockTasks.splice(taskIndex, 1);
-    return HttpResponse.json({
-      status: 200,
-      body: { message: 'Task deleted' }
-    });
-  }),
-
-  // User profile route
-  http.get(`${API_URL}/users/me`, () => {
-    return HttpResponse.json( {
-      status: 200,
-      body: DataMock.mockUser
-    });
+    return HttpResponse.json({ message: 'Task deleted' },
+      { status: 200 }
+    );
   }),
   // Auth route
   http.post(`${API_URL}/auth/login`, async ({ request }) => {
@@ -174,15 +173,17 @@ export const handlers = [
     
     if (username !== 'admin' || password !== 'password123') {
       return HttpResponse.json({
-        status: 401,
         statusText: 'Invalid credentials'
+      }, {
+        status: 401
       });
     }
     const token = `${DataMock.tokenPrefix}${username}`;
     
     return HttpResponse.json({
-      status: 200,
       access_token: token
+    }, {
+      status: 200
     });
   }),
 ];
