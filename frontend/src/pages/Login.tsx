@@ -16,17 +16,19 @@ const Login: React.FC = () => {
     try {
       setLoading(true);
       const response = await axiosInstance.post<{ status: number, access_token: string }>("/auth/login", values);
-      if (response.status === 200) {
-        showNotification('success', "Login successful!");
-        localStorage.setItem("token", response.data.access_token);
-        window.location.href = "/"; // Redirect to home after login
-      }
-      else if (response.status === 401) {
-        showNotification('error', "Login failed. Please enter your credentials and try again");
-      }
+      showNotification('success', "Login successful!");
+      localStorage.setItem("token", response.data.access_token);
+      window.location.href = "/"; // Redirect to home after login
       
     } catch (error) {
-      showNotification('error', "Login failed due to server error.");
+      if (error.status === 401) {
+        showNotification('error', "Login failed. Please enter your credentials and try again");
+      }
+      else if (error.status === 500) {
+        showNotification('error', "Login failed due to server error.");
+      } else {
+        showNotification('error', "An unexpected error occurred while trying to login.");
+      }
     } finally {
       setLoading(false);
     }

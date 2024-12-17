@@ -15,7 +15,7 @@ const ViewAll: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]); 
   const [loading, setLoading] = useState<boolean>(false);
   const { notification, callBackShowNotification } = useNotification();
-
+  
   return (
     <div className="viewall-container">
       {notification && (

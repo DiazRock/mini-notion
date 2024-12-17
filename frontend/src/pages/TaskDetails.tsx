@@ -20,7 +20,6 @@ const TaskDetails: React.FC = () => {
             Authorization: 'Bearer ' + token,
           },
         });
-        console.log(`The response was: ${response}`);
         setTask(response.data);
       } catch (error) {
         console.error('Failed to fetch task details');

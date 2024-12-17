@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Input, Button, Typography, Form, Select } from 'antd';
 import axiosInstance from '../api';
 import { Note, NoteFormValues } from '../interfaces';
@@ -14,25 +14,6 @@ const Notes: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const { notification, callBackShowNotification } = useNotification();
-
-  useEffect(() => {
-    (async (): Promise<void> => {
-      try {
-        setLoading(true);
-        const token = localStorage.getItem('token');
-        const response = await axiosInstance.get<Note[]>('/notes', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setNotes(response.data);
-      } catch (error) {
-        callBackShowNotification('error', 'Failed to fetch notes');
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [callBackShowNotification]);
 
   const handleAddNote = async (values: Note): Promise<void> => {
     try {

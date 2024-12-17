@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layout, Menu, Typography, Button } from 'antd';
+import { Layout, Menu, Typography, Button, Input, Table } from 'antd';
 import { Link, Outlet, useNavigate } from 'react-router-dom'; // To handle navigation
 import { SearchResult } from '../interfaces';
 import axiosInstance from '../api';
@@ -8,11 +8,13 @@ import '../styles/Home.css';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
+const { Search } = Input;
 
 const Home: React.FC = () => {
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]); // Array of search results
-  const [drawerVisible, setDrawerVisible] = useState<boolean>(false); // Drawer visibility state
-  const navigate = useNavigate(); // Hook to programmatically navigate
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const toggleDrawer = (): void => {
     setDrawerVisible(!drawerVisible);
@@ -23,14 +25,35 @@ const Home: React.FC = () => {
   };
 
   const handleSearch = async (query: string): Promise<void> => {
-    console.log(`Searching for: ${query}`);
     try {
-      const response = await axiosInstance.get<SearchResult[]>(`/search?query=${query}`);
+      const token = localStorage.getItem('token')
+      const response = await axiosInstance.get<SearchResult[]>(
+        `/search?query=${query}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        }
+      );
       setSearchResults(response.data);
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
   };
+
+  const columns = [
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
+      render: (type: string) => <strong>{type}</strong>, // Bold type
+    },
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+    }
+  ]
 
   const handleLogout = (): void => {
     localStorage.removeItem('token'); // Remove token from localStorage
@@ -61,7 +84,29 @@ const Home: React.FC = () => {
         </Menu>
       </Header>
       <Content className="layout-content">
-        <Outlet />
+        {/* Search Bar */}
+        <div style={{ padding: '20px' }}>
+          <Search
+            placeholder="Search for notes or tasks..."
+            onSearch={handleSearch}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchQuery}
+            enterButton="Search"
+            size="large"
+          />
+        </div>
+
+        {searchResults.length === 0 && <Outlet />}
+        { searchResults.length > 0 && (
+          <>
+            <Title level={4}>Search Results</Title>
+            <Table
+              columns={columns}
+              dataSource={searchResults.map((result) => ({ ...result, key: result.id }))}
+              pagination={{ pageSize: 5 }}
+            />
+          </>
+        ) }
       </Content>
     </Layout>
   );
