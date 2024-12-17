@@ -39,7 +39,7 @@ class AuthService:
         try:
             payload = jwt.decode(token, self.config.SECRET_KEY, algorithms=[self.config.ENCRYPT_ALGORITHM])
             self.logger.info(f"Token is valid {payload}")
-            return payload  # Return decoded token payload
+            return payload
         except JWTError:
             raise HTTPException(
                 status_code=401,

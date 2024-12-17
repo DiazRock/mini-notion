@@ -1,27 +1,34 @@
 import pytest
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base
 from fastapi.testclient import TestClient
 from app.dep_container import get_db
 from app.main import app
 
 @pytest.fixture(scope='module')
 def mock_db():
-    from sqlalchemy.orm import sessionmaker
-    from sqlalchemy import create_engine
-    from sqlalchemy.ext.declarative import declarative_base
 
-    # In-memory SQLite for testing
-    engine = create_engine("sqlite:///:memory:")
-    SessionLocal = sessionmaker(bind=engine)
+    engine = create_engine(
+        "sqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+        )
+    SessionLocal = sessionmaker(autocommit=False, bind=engine, autoflush=False)
 
-    # Base model setup
     Base = declarative_base()
 
-    # Mock `User`, `Note`, and `Task` tables in the database
     Base.metadata.create_all(bind=engine)
 
     session = SessionLocal()
-    yield session
-    session.close()
+
+    try:
+        yield session
+    finally:
+
+        session.close()
+        Base.metadata.drop_all(bind=engine)
 
 
 @pytest.fixture
@@ -30,15 +37,16 @@ def client(mock_db):
     def override_get_db():
         yield mock_db
 
-    app.dependency_overrides[get_db] = override_get_db
-
     with TestClient(app) as test_client:
+        app.dependency_overrides[get_db] = override_get_db
         yield test_client
 
-    #app.dependency_overrides.clear()
+    app.dependency_overrides.clear()
 
 
-def test_user_flow(client):
+def test_user_flow(client, mock_db):
+
+    print(f'The database in the test_user_flow {mock_db.bind}')
 
     # Register User
     response = client.post(

@@ -24,7 +24,7 @@ Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3005"],  # Specify the exact origin here
+    allow_origins=["http://localhost:3005"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

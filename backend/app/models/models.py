@@ -48,7 +48,7 @@ class Note(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     content = Column(String)
-    tags = Column(JSON, nullable=True)  # Stores tags as a JSON array
+    tags = Column(JSON, nullable=True)
     user_id = Column(Integer, ForeignKey('users.id'))
 
     user = relationship("User", back_populates="notes")
