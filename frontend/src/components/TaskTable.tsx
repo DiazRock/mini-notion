@@ -24,7 +24,6 @@ const TaskTable: React.FC<TableProps<Task>> = ({
                             'Authorization': 'Bearer ' + token,
                         },
                     });
-                console.log(`The response was: ${JSON.stringify(response)}`);
                 setData(response.data);
             } catch (error) {
                 callBackShowNotification('error', 'Failed to fetch tasks');
