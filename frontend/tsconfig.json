@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "jsx": "react-jsx",
+      "target": "ES6",
+      "module": "nodenext",
+      "moduleResolution": "nodenext",
+      "noEmit": true,
+      "baseUrl": ".",
+      "paths": {
+        "~/*": ["./*"]
+      },
+      "esModuleInterop": true
+    },
+    "include": ["src/**/*", "tests/**/*"],
+    "exclude": ["node_modules"]
+}

@@ -1,0 +1,85 @@
+/* TaskDetails General Styles */
+.task-details {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+/* Header */
+.task-details h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+/* Details */
+.task-details p {
+    font-size: 16px;
+    color: #333;
+    margin: 0;
+    word-wrap: break-word;
+  }
+  
+/* Labels and values */
+.task-details p strong {
+    font-weight: bold;
+    color: #555;
+  }
+  
+/* Back Button */
+.task-details a button {
+    align-self: center;
+    padding: 10px 20px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+/* Button Hover */
+.task-details a button:hover {
+    background-color: #1890ff;
+    color: #fff;
+  }
+  
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .task-details {
+      padding: 15px;
+      gap: 10px;
+    }
+  
+    .task-details h1 {
+      font-size: 20px;
+    }
+  
+    .task-details p {
+      font-size: 14px;
+    }
+  
+    .task-details a button {
+      font-size: 14px;
+      padding: 8px 16px;
+    }
+  }
+  
+@media (max-width: 480px) {
+    .task-details {
+      padding: 10px;
+    }
+  
+    .task-details h1 {
+      font-size: 18px;
+    }
+  
+    .task-details p {
+      font-size: 13px;
+    }
+  }
+  

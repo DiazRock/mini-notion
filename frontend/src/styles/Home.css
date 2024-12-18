@@ -1,0 +1,73 @@
+/* General layout styling */
+.layout-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f0f2f5;
+  }
+
+.layout-content {
+    flex: 1;
+    padding: 24px; /* Optional padding */
+    background-color: #f0f2f5; /* Light gray background */
+    overflow: auto; /* Handle overflow if content is too large */
+    flex-grow: 1;
+  }
+
+.custom-header {
+  background-color: #001529;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.custom-header .title {
+  color: #fff;
+  margin: 0;
+}
+
+/* Sider styling */
+.layout-sider {
+  background-color: #f0f2f5;
+  border-right: 1px solid #d9d9d9;
+}
+
+.sider-menu {
+  height: 100%;
+}
+
+
+
+/* Search bar and content container */
+.search-bar-container {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.search-bar-container > * {
+  flex: 1 1 calc(50% - 10px); /* Adjust for two columns with a small gap */
+}
+
+/* Responsive design for small screens */
+@media (max-width: 768px) {
+  .search-bar-container {
+    flex-direction: column;
+  }
+
+  .search-bar-container > * {
+    flex: 1 1 100%; /* Full width in smaller viewports */
+  }
+
+  .ant-layout-sider {
+    display: none !important; /* Hide the sider on smaller screens */
+  }
+}
+
+.mobile-collapse-button {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
