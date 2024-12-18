@@ -10,18 +10,6 @@
         <mxCell id="rei8dWYcBY5KjDxPgK8N-4" value="Mini-notion user" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="70" y="120" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="rei8dWYcBY5KjDxPgK8N-5" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="230" y="140" as="sourcePoint" />
-            <mxPoint x="330" y="140" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="300" y="140" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="rei8dWYcBY5KjDxPgK8N-6" value="Visits (Https)" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="rei8dWYcBY5KjDxPgK8N-5">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <mxCell id="rei8dWYcBY5KjDxPgK8N-9" value="" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.cloud_rect" vertex="1" parent="1">
           <mxGeometry x="340" y="20" width="430" height="270" as="geometry" />
         </mxCell>
@@ -57,6 +45,18 @@
         </mxCell>
         <mxCell id="rei8dWYcBY5KjDxPgK8N-17" value="Database&lt;br&gt;Stores the data" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#FFFFFF;" vertex="1" parent="1">
           <mxGeometry x="382.5" y="130" width="105" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="rei8dWYcBY5KjDxPgK8N-21" value="" style="endArrow=classic;html=1;rounded=0;entryX=-0.003;entryY=0.76;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="230" y="140" as="sourcePoint" />
+            <mxPoint x="360" y="111" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="300" y="140" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rei8dWYcBY5KjDxPgK8N-22" value="Visits (Https)" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="rei8dWYcBY5KjDxPgK8N-21">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
