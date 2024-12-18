@@ -4,7 +4,7 @@
 
 ### Project description
 
-**Mini-Notion** is a web application, based on the Notion agenda (https://www.notion.so/), that has an user view, connected to a backend, in order to keep a state related to the tasks the user can schedule in this view. 
+**Mini-Notion** is a web application, based on the Notion [agenda](https://www.notion.so/), that has an user view, connected to a backend, in order to keep a state related to the tasks the user can schedule in this view. 
 
 The **target groups** we can mention for this app are, individuals who require a simple and intuitive task and note management solution, such as students and professionals looking for an organized workspace to plan and track tasks and casual users needing lightweight productivity tools with easy accessibility. 
 
