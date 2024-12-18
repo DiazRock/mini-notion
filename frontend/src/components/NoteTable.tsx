@@ -7,8 +7,7 @@ import { Button, Space, Table, Tag } from "antd";
 const NoteTable: React.FC<TableProps<Note>> = ( {
     data,
     setData,
-    callBackShowNotification,
-    setLoading,
+    callBackShowNotification
 } ) => {
 
     const handleDeleteNote = async (id: number): Promise<void> => {
@@ -62,7 +61,6 @@ const NoteTable: React.FC<TableProps<Note>> = ( {
     useEffect(() => {
         (async (): Promise<void> => {
           try {
-            setLoading(true);
             const token = localStorage.getItem('token');
             const response = await axiosInstance.get<Note[]>('/notes', {
               headers: {
@@ -73,10 +71,9 @@ const NoteTable: React.FC<TableProps<Note>> = ( {
           } catch (error) {
             callBackShowNotification('error', 'Failed to fetch notes');
           } finally {
-            setLoading(false);
           }
         })();
-      }, [callBackShowNotification]);
+      }, [callBackShowNotification, setData]);
 
     return (
         <Table

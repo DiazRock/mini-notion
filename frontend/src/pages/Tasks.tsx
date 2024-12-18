@@ -80,7 +80,6 @@ const Tasks: React.FC = () => {
       <TaskTable
         data={tasks}
         setData={setTasks}
-        setLoading={setLoading}
         callBackShowNotification={callBackShowNotification}
         />
     </>

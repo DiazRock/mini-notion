@@ -53,6 +53,5 @@ export interface User {
 export interface TableProps<T> {
     data: T[];
     setData: React.Dispatch<React.SetStateAction<T[]>>;
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
     callBackShowNotification: (type: "success" | "error", message: string) => Promise<void>;
   }

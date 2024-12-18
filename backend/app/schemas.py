@@ -18,7 +18,7 @@ class UserResponse(BaseModel):
 
 
 class TaskDTO(BaseModel):
-    id: int
+    id: Optional[int]
     title: str = Field(..., max_length=255)
     description: str = Field(..., max_length=1000) 
     priority: Literal['High', 'Medium', 'Low'] 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Layout, Menu, Typography, Button, Input, Table } from 'antd';
-import { Link, Outlet, useNavigate } from 'react-router-dom'; // To handle navigation
+import { Layout, Menu, Typography, Input, Table } from 'antd';
+import { Link, Outlet, useNavigate } from 'react-router-dom'; // For navigation
 import { SearchResult } from '../interfaces';
 import axiosInstance from '../api';
 import '../styles/Navbar.css';
@@ -12,26 +12,17 @@ const { Search } = Input;
 
 const Home: React.FC = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
-  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-
-  const toggleDrawer = (): void => {
-    setDrawerVisible(!drawerVisible);
-  };
-
-  const closeDrawer = (): void => {
-    setDrawerVisible(false);
-  };
+  const navigate = useNavigate();
 
   const handleSearch = async (query: string): Promise<void> => {
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token');
       const response = await axiosInstance.get<SearchResult[]>(
         `/search?query=${query}`,
         {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -39,6 +30,16 @@ const Home: React.FC = () => {
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
+  };
+
+  const handleLogout = (): void => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
+
+  const clearSearchResults = (): void => {
+    setSearchResults([]);
+    setSearchQuery('');
   };
 
   const columns = [
@@ -52,16 +53,12 @@ const Home: React.FC = () => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-    }
-  ]
-
-  const handleLogout = (): void => {
-    localStorage.removeItem('token'); // Remove token from localStorage
-    navigate('/login'); // Redirect to the login page
-  };
+    },
+  ];
 
   return (
     <Layout className="layout-container">
+      {/* Navbar */}
       <Header className="navbar-header">
         <div className="navbar-logo">
           <Title level={3}>
@@ -69,20 +66,21 @@ const Home: React.FC = () => {
           </Title>
         </div>
         <Menu mode="horizontal" theme="dark" className="navbar-menu">
-          <Menu.Item key="tasks">
+          <Menu.Item key="tasks" onClick={clearSearchResults}>
             <Link to="/tasks">Tasks</Link>
           </Menu.Item>
-          <Menu.Item key="notes">
+          <Menu.Item key="notes" onClick={clearSearchResults}>
             <Link to="/notes">Notes</Link>
           </Menu.Item>
-          <Menu.Item key="view-all">
+          <Menu.Item key="view-all" onClick={clearSearchResults}>
             <Link to="/view-all">View All</Link>
           </Menu.Item>
-          <Menu.Item key="logout" onClick={handleLogout}>
+          <Menu.Item key="logout" onClick={() => { handleLogout(); clearSearchResults(); }}>
             Logout
           </Menu.Item>
         </Menu>
       </Header>
+
       <Content className="layout-content">
         {/* Search Bar */}
         <div style={{ padding: '20px' }}>
@@ -96,17 +94,22 @@ const Home: React.FC = () => {
           />
         </div>
 
-        {searchResults.length === 0 && <Outlet />}
-        { searchResults.length > 0 && (
+        {/* Render Search Results or Outlet */}
+        {searchResults.length > 0 ? (
           <>
             <Title level={4}>Search Results</Title>
             <Table
               columns={columns}
-              dataSource={searchResults.map((result) => ({ ...result, key: result.id }))}
+              dataSource={searchResults.map((result) => ({
+                ...result,
+                key: result.id,
+              }))}
               pagination={{ pageSize: 5 }}
             />
           </>
-        ) }
+        ) : (
+          <Outlet />
+        )}
       </Content>
     </Layout>
   );

@@ -10,13 +10,11 @@ const TaskTable: React.FC<TableProps<Task>> = ({
         data,
         setData, 
         callBackShowNotification,
-        setLoading 
     }) => {
     
     useEffect(() => {
         (async (): Promise<void> => {
             try {
-                setLoading(true);
                 const token = localStorage.getItem('token');
                 const response = await axiosInstance.get(
                     '/tasks/', {
@@ -28,10 +26,9 @@ const TaskTable: React.FC<TableProps<Task>> = ({
             } catch (error) {
                 callBackShowNotification('error', 'Failed to fetch tasks');
             } finally {
-                setLoading(false);
             }
         })();
-    }, [callBackShowNotification]);
+    }, [callBackShowNotification, setData]);
 
     const toggleCompletion = async (taskId: number): Promise<void> => {
         try {

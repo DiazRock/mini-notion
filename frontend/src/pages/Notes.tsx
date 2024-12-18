@@ -12,7 +12,6 @@ const { Option } = Select;
 
 const Notes: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const { notification, callBackShowNotification } = useNotification();
 
   const handleAddNote = async (values: Note): Promise<void> => {
@@ -60,7 +59,6 @@ const Notes: React.FC = () => {
         data={notes}
         setData={setNotes}
         callBackShowNotification={callBackShowNotification}
-        setLoading={setLoading}
       />
     </div>
   );
