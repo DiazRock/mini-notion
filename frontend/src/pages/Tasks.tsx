@@ -4,6 +4,7 @@ import { Task } from '../interfaces';
 import axiosInstance from '../api';
 import { useNotification } from '../utils/notificationHook';
 import TaskTable from '../components/TaskTable';
+import moment from 'moment';
 
 
 const { TextArea } = Input;
@@ -64,7 +65,11 @@ const Tasks: React.FC = () => {
           </Select>
         </Form.Item>
         <Form.Item name="due_date" rules={[{ required: true, message: 'Please select a due date' }]}>
-          <DatePicker placeholder="Due Date" format="YYYY-MM-DD" />
+          <DatePicker 
+            placeholder="Due Date" 
+            format="YYYY-MM-DD" 
+            disabledDate={(current) => current && current < moment().startOf('day')}
+          />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={loading}>
